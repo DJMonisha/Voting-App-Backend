@@ -20,6 +20,7 @@ const fetchVotes = async () => {
     return { votingPolls: votes, totalVotes: total };
 };
 
+
 const updateVote = async (option) => {
     console.log("🗳 Incrementing vote for:", option);
 
@@ -40,13 +41,23 @@ const updateVote = async (option) => {
 };
 
 
+
+
 io.on('connection', async (socket) => {
+    console.log("✅ A user connected");
+
     const voteData = await fetchVotes();
     socket.emit('update', voteData);
 
     socket.on('send-vote', async (voteTo) => {
+        console.log("📩 Received vote for:", voteTo);  
         await updateVote(voteTo);
         const updatedVotes = await fetchVotes();
         io.emit('update', updatedVotes);
     });
+
+    socket.on('disconnect', () => {
+        console.log("❌ A user disconnected");
+    });
 });
+
