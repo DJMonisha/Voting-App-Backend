@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const io = require('socket.io')(8000, { cors: { origin: "*" } });
 
@@ -49,5 +48,5 @@ io.on('connection', async (socket) => {
         await updateVote(voteTo);
         const updatedVotes = await fetchVotes();
         io.emit('update', updatedVotes);
-    });
+    });
 });
